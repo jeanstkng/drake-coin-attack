@@ -1,6 +1,7 @@
 import { Color, Engine } from "excalibur";
 import { Resources, loader } from "./loader";
 import { drake } from "./gameObjects/drake";
+import { enemySpawner } from "./gameObjects/enemySpawner";
 
 const game = new Engine({
   backgroundColor: Color.Chartreuse,
@@ -14,3 +15,5 @@ game.start(loader).then(() => {
 
 game.add(drake);
 game.currentScene.camera.strategy.lockToActor(drake);
+
+game.add(enemySpawner);

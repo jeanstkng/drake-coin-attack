@@ -19,6 +19,7 @@ export const Resources = {
     false,
     ImageFiltering.Pixel
   ),
+  WarriorYellowSpriteSheet: new ImageSource("./src/images/Warrior_Yellow.png", false, ImageFiltering.Pixel),
   TiledMap: new TiledResource(tmxPath, {
     useTilemapCameraStrategy: true,
     pathMap: [

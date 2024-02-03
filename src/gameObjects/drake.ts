@@ -20,7 +20,6 @@ export class Drake extends Actor {
       this.getRandomArbitrary(-1, 1) * this.speed,
       this.getRandomArbitrary(-1, 1) * this.speed
     );
-    console.log(this.randomDirection);
   }
 
   onPreUpdate(_engine: Engine, delta: number): void {
@@ -28,30 +27,29 @@ export class Drake extends Actor {
 
     if (this.timerCounter >= this.randomTime) {
       this.randomTime = Math.floor(this.getRandomArbitrary(3000, 5000));
-      this.randomDirection = vec(
-        this.getRandomArbitrary(-1, 1) * this.speed,
-        this.getRandomArbitrary(-1, 1) * this.speed
-      );
+      this.generateRandomDirection();
       this.timerCounter = 0;
     } else {
       this.timerCounter += delta;
     }
 
     this.vel = this.randomDirection;
-    if (this.pos.x <= 100 || this.pos.x >= 3100) {
-      this.randomDirection = vec(
-        this.getRandomArbitrary(-1, 1) * 150,
-        this.getRandomArbitrary(-1, 1) * 150
-      );
+    if (
+      this.pos.x <= 100 ||
+      this.pos.x >= 3100 ||
+      this.pos.y <= 100 ||
+      this.pos.y >= 3100
+    ) {
+      this.generateRandomDirection();
       this.vel = this.randomDirection;
     }
-    if (this.pos.y <= 100 || this.pos.y >= 3100) {
-      this.randomDirection = vec(
-        this.getRandomArbitrary(-1, 1) * 150,
-        this.getRandomArbitrary(-1, 1) * 150
-      );
-      this.vel = this.randomDirection;
-    }
+  }
+
+  private generateRandomDirection() {
+    this.randomDirection = vec(
+      this.getRandomArbitrary(-1, 1) * this.speed,
+      this.getRandomArbitrary(-1, 1) * this.speed
+    );
   }
 
   private getRandomArbitrary(min: number, max: number) {
