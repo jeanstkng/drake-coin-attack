@@ -1,6 +1,15 @@
-import { Actor, Engine, vec, Sprite, Vector, CollisionType } from "excalibur";
-import { Resources } from "../loader";
+import {
+  Actor,
+  Engine,
+  vec,
+  Sprite,
+  Vector,
+  CollisionType,
+  Keys,
+} from "excalibur";
+import { Resources, loader } from "../loader";
 import { FireAttackBasic } from "./fireAttackBasic";
+import { FireAttackQ } from "./fireAttackQ";
 
 export class Drake extends Actor {
   private isOffsetGoingUp: boolean = true;
@@ -12,11 +21,19 @@ export class Drake extends Actor {
   private randomTime: number = 0;
   private timerCounter: number = 0;
   private speed: number = 100;
+  private coins: number = 1000;
 
   private basicAttackCooldown: number = 3000;
   private basicAttackTimer: number = 0;
 
-  onInitialize(_engine: Engine): void {
+  private qAttackCooldown: number = 5000;
+  private qAttackTimer: number = 0;
+  private canUseQAttack: boolean = true;
+
+  onInitialize(engine: Engine): void {
+    this.reduceCoins(0);
+
+    this.name = "drake";
     this.graphics.add(this.drakeImg);
     this.randomTime = Math.floor(this.getRandomArbitrary(3000, 5000));
 
@@ -24,9 +41,31 @@ export class Drake extends Actor {
       this.getRandomArbitrary(-1, 1) * this.speed,
       this.getRandomArbitrary(-1, 1) * this.speed
     );
+
+    engine.input.keyboard.on("release", (keyEv) => {
+      if (keyEv.key === Keys.Q && this.canUseQAttack) {
+        this.reduceCoins(50);
+        this.canUseQAttack = false;
+        document.getElementById("q-button")!.style.opacity = "0.25";
+        engine.add(
+          new FireAttackQ({
+            z: 15,
+            pos: this.pos,
+            width: 64,
+            height: 64,
+            collisionType: CollisionType.Passive,
+          })
+        );
+      }
+    });
   }
 
   onPreUpdate(engine: Engine, delta: number): void {
+    if (this.coins <= 0) {
+      this.vel = Vector.Zero;
+      return;
+    }
+
     this.animateOffset();
 
     if (this.basicAttackTimer >= this.basicAttackCooldown) {
@@ -37,11 +76,19 @@ export class Drake extends Actor {
           pos: this.pos,
           width: 24,
           height: 24,
-          collisionType: CollisionType.Passive
+          collisionType: CollisionType.Passive,
         })
       );
     } else {
       this.basicAttackTimer += delta;
+    }
+
+    if (this.qAttackTimer >= this.qAttackCooldown && !this.canUseQAttack) {
+      this.qAttackTimer = 0;
+      document.getElementById("q-button")!.style.opacity = "1";
+      this.canUseQAttack = true;
+    } else {
+      this.qAttackTimer += delta;
     }
 
     if (this.timerCounter >= this.randomTime) {
@@ -62,6 +109,26 @@ export class Drake extends Actor {
       this.generateRandomDirection();
       this.vel = this.randomDirection;
     }
+  }
+
+  public setCoins(quantity: number) {
+    this.coins = quantity;
+  }
+
+  public getCoins() {
+    return this.coins;
+  }
+
+  public reduceCoins(quantity: number) {
+    this.setCoins(this.getCoins() - quantity);
+
+    document.getElementById("actualCoins")!.innerText = `${this.getCoins()}`;
+  }
+
+  public incrementCoins(quantity: number) {
+    this.setCoins(this.getCoins() + quantity);
+
+    document.getElementById("actualCoins")!.innerText = `${this.getCoins()}`;
   }
 
   private generateRandomDirection() {

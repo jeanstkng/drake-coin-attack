@@ -19,8 +19,36 @@ export const Resources = {
     false,
     ImageFiltering.Pixel
   ),
-  WarriorYellowSpriteSheet: new ImageSource("./src/images/Warrior_Yellow.png", false, ImageFiltering.Pixel),
-  FireBasicImage: new ImageSource("./src/images/Fire.png", false, ImageFiltering.Pixel),
+  GoButtonImage: new ImageSource(
+    "./src/images/goBtn.png",
+    false,
+    ImageFiltering.Pixel
+  ),
+  FruitsSpriteSheet: new ImageSource(
+    "./src/images/Fruits.png",
+    false,
+    ImageFiltering.Pixel
+  ),
+  WarriorYellowSpriteSheet: new ImageSource(
+    "./src/images/Warrior_Yellow.png",
+    false,
+    ImageFiltering.Pixel
+  ),
+  FireBasicImage: new ImageSource(
+    "./src/images/Fire.png",
+    false,
+    ImageFiltering.Pixel
+  ),
+  FireboltImage: new ImageSource(
+    "./src/images/Firebolt.png",
+    false,
+    ImageFiltering.Pixel
+  ),
+  QButtonImage: new ImageSource(
+    "./src/images/qButton.png",
+    false,
+    ImageFiltering.Pixel
+  ),
   TiledMap: new TiledResource(tmxPath, {
     useTilemapCameraStrategy: true,
     pathMap: [

@@ -1,13 +1,47 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Drake Coin Addict</title>
+    <title>Drake Coin Attack</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style type="text/css">
+      #root {
+        position: relative;
+      }
+      #root #ui {
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="root">
+      <canvas id="game"></canvas>
+      <div id="ui">
+        <div id="coin">
+          <picture>
+            <img width="32" src="./src/images/coin.png" />
+          </picture>
+          <span id="actualCoins"></span>
+        </div>
+        <div id="gamble">
+          <button id="gambleLess">-</button>
+          <span id="actualBet">10</span>
+          <button id="gambleMore">+</button>
+        </div>
+        <button id="q-button">
+          <picture>
+            <p>50 G</p>
+            <img class="powerIcon" src="./src/images/Firebolt.png" />
+            <img class="keyIcon" src="./src/images/QButton.png" />
+          </picture>
+        </button>
+      </div>
+    </div>
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>

@@ -36,13 +36,8 @@ export class FireAttackBasic extends Actor {
       }
     );
 
-    console.log(this.rotation, "initial");
-
-    this.rotation = this.calculateRotationAngleInRadians(
-      this.pos,
-      this.nearestActor.pos
-    ) * 3;
-    console.log(this.rotation, "later on");
+    this.rotation =
+      this.calculateRotationAngleInRadians(this.pos, this.nearestActor.pos) * 3;
   }
 
   onPreUpdate(_engine: Engine, _delta: number): void {

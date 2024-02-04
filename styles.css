@@ -1,0 +1,63 @@
+#q-button {
+  position: absolute;
+  left: 600px;
+  top: 500px;
+  width: 64px;
+  height: 64px;
+  border-radius: 25%;
+  background-color: beige;
+  border: none;
+  opacity: 1;
+}
+#q-button p {
+  position: absolute;
+  z-index: 2;
+  left: 18px;
+  top: -24px;
+  font-weight: 800;
+}
+
+.keyIcon {
+  position: absolute;
+  bottom: 4px;
+  left: 30%;
+}
+.powerIcon {
+  position: absolute;
+  width: 32px;
+  left: 14px;
+  bottom: 28px;
+}
+#coin {
+  position: absolute;
+  left: 48px;
+  top: 48px;
+  display: inline-flex;
+  align-items: center;
+}
+#coin span {
+  font-weight: 700;
+  font-size: x-large;
+}
+#gamble {
+  width: 200px;
+  position: absolute;
+  top: 550px;
+  left: 224px;
+}
+#gamble {
+  font-size: x-large;
+  font-weight: 700;
+}
+#gamble button {
+  font-size: x-large;
+  font-weight: 700;
+  border: none;
+  width: 32px;
+  border-radius: 25%;
+  background-color: beige;
+}
+
+#gamble button:hover {
+  background-color: azure;
+}
