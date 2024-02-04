@@ -1,17 +1,31 @@
-import { Actor, Animation, Engine, SpriteSheet, Vector, vec } from "excalibur";
+import {
+  Actor,
+  Animation,
+  Collider,
+  CollisionContact,
+  Engine,
+  Side,
+  SpriteSheet,
+  Vector,
+  vec,
+} from "excalibur";
 import { Resources } from "../loader";
-import { Drake, drake } from "./drake";
+import { Drake } from "./drake";
 
 export class Enemy extends Actor {
   private drake: Drake;
   private speed: number = 100;
+  private health: number = 100;
 
   constructor(args: object, drake: Drake) {
     super(args);
+    this.name = "enemy";
     this.drake = drake;
   }
 
   onInitialize(_engine: Engine): void {
+    this.speed = this.getRandomArbitrary(30, 100);
+
     const spriteSheet = SpriteSheet.fromImageSource({
       image: Resources.WarriorYellowSpriteSheet,
       grid: {
@@ -22,32 +36,46 @@ export class Enemy extends Actor {
       },
     });
 
-    const rightIdle = new Animation({
+    const rightWalk = new Animation({
       frames: [
-        { graphic: spriteSheet.getSprite(0, 0) as ex.Sprite, duration: 200 },
-        { graphic: spriteSheet.getSprite(1, 0) as ex.Sprite, duration: 200 },
-        { graphic: spriteSheet.getSprite(2, 0) as ex.Sprite, duration: 200 },
-        { graphic: spriteSheet.getSprite(3, 0) as ex.Sprite, duration: 200 },
-        { graphic: spriteSheet.getSprite(4, 0) as ex.Sprite, duration: 200 },
-        { graphic: spriteSheet.getSprite(5, 0) as ex.Sprite, duration: 200 },
+        { graphic: spriteSheet.getSprite(0, 1) as ex.Sprite, duration: 200 },
+        { graphic: spriteSheet.getSprite(1, 1) as ex.Sprite, duration: 200 },
+        { graphic: spriteSheet.getSprite(2, 1) as ex.Sprite, duration: 200 },
+        { graphic: spriteSheet.getSprite(3, 1) as ex.Sprite, duration: 200 },
+        { graphic: spriteSheet.getSprite(4, 1) as ex.Sprite, duration: 200 },
+        { graphic: spriteSheet.getSprite(5, 1) as ex.Sprite, duration: 200 },
       ],
       scale: vec(0.5, 0.5),
     });
-    this.graphics.add("right-idle", rightIdle);
+    this.graphics.add("right-walk", rightWalk);
+
+    this.on("collisionstart", (precollisionEv) => {
+      if (precollisionEv.other.name === "fireAttackBasic") {
+        this.health -= 50;
+        precollisionEv.other.kill();
+
+        if (this.health <= 0) {
+          this.kill();
+        }
+      }
+    });
   }
 
   onPreUpdate(_engine: Engine, _delta: number): void {
-    this.graphics.use("right-idle");
+    this.graphics.use("right-walk");
+    if (this.vel.x > 0) {
+      this.graphics.flipHorizontal = false;
+    } else {
+      this.graphics.flipHorizontal = true;
+    }
 
     if (
       Vector.distance(this.pos, this.drake.pos) <= 600 &&
       Vector.distance(this.pos, this.drake.pos) >= 64
     ) {
-      // Calculate the direction vector from enemy to drake
       const directionX = this.drake.pos.x - this.pos.x;
       const directionY = this.drake.pos.y - this.pos.y;
 
-      // Normalize the direction vector
       const length = Math.sqrt(directionX ** 2 + directionY ** 2);
       const normalizedDirectionX = directionX / length;
       const normalizedDirectionY = directionY / length;
@@ -57,17 +85,11 @@ export class Enemy extends Actor {
         normalizedDirectionY * this.speed
       );
     } else if (Vector.distance(this.pos, this.drake.pos) >= 800) {
-        this.kill();
+      this.kill();
     }
   }
-}
 
-export const enemy: Enemy = new Enemy(
-  {
-    width: 32,
-    height: 32,
-    pos: vec(1600, 1700),
-    z: 14,
-  },
-  drake
-);
+  private getRandomArbitrary(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+}

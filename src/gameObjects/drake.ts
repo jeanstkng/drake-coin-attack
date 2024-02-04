@@ -1,5 +1,6 @@
-import { Actor, Engine, vec, Sprite, Vector } from "excalibur";
+import { Actor, Engine, vec, Sprite, Vector, CollisionType } from "excalibur";
 import { Resources } from "../loader";
+import { FireAttackBasic } from "./fireAttackBasic";
 
 export class Drake extends Actor {
   private isOffsetGoingUp: boolean = true;
@@ -12,6 +13,9 @@ export class Drake extends Actor {
   private timerCounter: number = 0;
   private speed: number = 100;
 
+  private basicAttackCooldown: number = 3000;
+  private basicAttackTimer: number = 0;
+
   onInitialize(_engine: Engine): void {
     this.graphics.add(this.drakeImg);
     this.randomTime = Math.floor(this.getRandomArbitrary(3000, 5000));
@@ -22,8 +26,23 @@ export class Drake extends Actor {
     );
   }
 
-  onPreUpdate(_engine: Engine, delta: number): void {
+  onPreUpdate(engine: Engine, delta: number): void {
     this.animateOffset();
+
+    if (this.basicAttackTimer >= this.basicAttackCooldown) {
+      this.basicAttackTimer = 0;
+      engine.add(
+        new FireAttackBasic({
+          z: 15,
+          pos: this.pos,
+          width: 24,
+          height: 24,
+          collisionType: CollisionType.Passive
+        })
+      );
+    } else {
+      this.basicAttackTimer += delta;
+    }
 
     if (this.timerCounter >= this.randomTime) {
       this.randomTime = Math.floor(this.getRandomArbitrary(3000, 5000));

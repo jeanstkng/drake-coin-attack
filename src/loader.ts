@@ -20,6 +20,7 @@ export const Resources = {
     ImageFiltering.Pixel
   ),
   WarriorYellowSpriteSheet: new ImageSource("./src/images/Warrior_Yellow.png", false, ImageFiltering.Pixel),
+  FireBasicImage: new ImageSource("./src/images/Fire.png", false, ImageFiltering.Pixel),
   TiledMap: new TiledResource(tmxPath, {
     useTilemapCameraStrategy: true,
     pathMap: [
