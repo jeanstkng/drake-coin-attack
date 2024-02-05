@@ -25,7 +25,7 @@ export class SlotMachine extends ScreenElement {
     });
   }
 
-  onInitialize(engine: Engine): void {
+  onInitialize(_engine: Engine): void {
     const spriteSheet = SpriteSheet.fromImageSource({
       image: Resources.FruitsSpriteSheet,
       grid: {
@@ -120,7 +120,9 @@ goBtnSprite.scale = vec(0.75, 0.75);
 goButton.graphics.add(goBtnSprite);
 
 goButton.on("pointerup", () => {
-  slotMachine.shuffleGraphicGroup();
+  if (drake.getCoins() > 0) {
+    slotMachine.shuffleGraphicGroup();
+  }
 });
 
 export { slotMachine, goButton };

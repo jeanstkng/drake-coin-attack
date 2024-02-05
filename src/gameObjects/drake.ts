@@ -6,10 +6,12 @@ import {
   Vector,
   CollisionType,
   Keys,
+  Animation,
 } from "excalibur";
-import { Resources, loader } from "../loader";
+import { Resources } from "../loader";
 import { FireAttackBasic } from "./fireAttackBasic";
 import { FireAttackQ } from "./fireAttackQ";
+import { FireAttackW } from "./fireAttackW";
 
 export class Drake extends Actor {
   private isOffsetGoingUp: boolean = true;
@@ -17,24 +19,31 @@ export class Drake extends Actor {
   private drakeImg: Sprite = new Sprite({
     image: Resources.DrakeImage,
   });
+
   private randomDirection: Vector = new Vector(0, 0);
   private randomTime: number = 0;
   private timerCounter: number = 0;
   private speed: number = 100;
   private coins: number = 1000;
 
-  private basicAttackCooldown: number = 3000;
+  private basicAttackCooldown: number = 2000;
   private basicAttackTimer: number = 0;
 
   private qAttackCooldown: number = 5000;
   private qAttackTimer: number = 0;
   private canUseQAttack: boolean = true;
 
+  private wAttackCooldown: number = 8000;
+  private wAttackTimer: number = 0;
+  private canUseWAttack: boolean = true;
+
+  private deathExplosion!: Animation;
+
   onInitialize(engine: Engine): void {
     this.reduceCoins(0);
 
     this.name = "drake";
-    this.graphics.add(this.drakeImg);
+    this.graphics.add("drakeFly", this.drakeImg);
     this.randomTime = Math.floor(this.getRandomArbitrary(3000, 5000));
 
     this.randomDirection = vec(
@@ -44,7 +53,7 @@ export class Drake extends Actor {
 
     engine.input.keyboard.on("release", (keyEv) => {
       if (keyEv.key === Keys.Q && this.canUseQAttack) {
-        this.reduceCoins(50);
+        this.reduceCoins(10);
         this.canUseQAttack = false;
         document.getElementById("q-button")!.style.opacity = "0.25";
         engine.add(
@@ -57,14 +66,84 @@ export class Drake extends Actor {
           })
         );
       }
+
+      if (keyEv.key === Keys.W && this.canUseWAttack) {
+        this.reduceCoins(20);
+        this.canUseWAttack = false;
+        document.getElementById("w-button")!.style.opacity = "0.25";
+        engine.add(
+          new FireAttackW({
+            z: 15,
+            pos: this.pos,
+            width: 32,
+            height: 32,
+            collisionType: CollisionType.Passive,
+          })
+        );
+      }
     });
+
+    this.deathExplosion = new Animation({
+      frames: [
+        {
+          graphic: Resources["Explosion1"].toSprite() as Sprite,
+          duration: 25,
+        },
+        {
+          graphic: Resources["Explosion2"].toSprite() as Sprite,
+          duration: 50,
+        },
+        {
+          graphic: Resources["Explosion3"].toSprite() as Sprite,
+          duration: 75,
+        },
+        {
+          graphic: Resources["Explosion5"].toSprite() as Sprite,
+          duration: 100,
+        },
+        {
+          graphic: Resources["Explosion6"].toSprite() as Sprite,
+          duration: 125,
+        },
+        {
+          graphic: Resources["Explosion7"].toSprite() as Sprite,
+          duration: 150,
+        },
+        {
+          graphic: Resources["Explosion8"].toSprite() as Sprite,
+          duration: 175,
+        },
+        {
+          graphic: Resources["Explosion9"].toSprite() as Sprite,
+          duration: 200,
+        },
+        {
+          graphic: Resources["Explosion10"].toSprite() as Sprite,
+          duration: 225,
+        },
+        {
+          graphic: Resources["Explosion11"].toSprite() as Sprite,
+          duration: 250,
+        },
+        {
+          graphic: Resources["Explosion12"].toSprite() as Sprite,
+          duration: 275,
+        },
+      ],
+    });
+
+    this.graphics.add("death", this.deathExplosion);
   }
 
   onPreUpdate(engine: Engine, delta: number): void {
     if (this.coins <= 0) {
       this.vel = Vector.Zero;
+      this.graphics.use("death");
+      document.getElementById("game-ui")!.style.visibility = "hidden";
+      document.getElementById("game-over")!.style.visibility = "visible";
       return;
     }
+    this.graphics.use("drakeFly");
 
     this.animateOffset();
 
@@ -89,6 +168,14 @@ export class Drake extends Actor {
       this.canUseQAttack = true;
     } else {
       this.qAttackTimer += delta;
+    }
+
+    if (this.wAttackTimer >= this.wAttackCooldown && !this.canUseWAttack) {
+      this.wAttackTimer = 0;
+      document.getElementById("w-button")!.style.opacity = "1";
+      this.canUseWAttack = true;
+    } else {
+      this.wAttackTimer += delta;
     }
 
     if (this.timerCounter >= this.randomTime) {

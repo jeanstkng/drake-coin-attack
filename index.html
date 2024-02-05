@@ -22,24 +22,37 @@
     <div id="root">
       <canvas id="game"></canvas>
       <div id="ui">
-        <div id="coin">
-          <picture>
-            <img width="32" src="./src/images/coin.png" />
-          </picture>
-          <span id="actualCoins"></span>
-        </div>
-        <div id="gamble">
-          <button id="gambleLess">-</button>
-          <span id="actualBet">10</span>
-          <button id="gambleMore">+</button>
-        </div>
-        <button id="q-button">
-          <picture>
-            <p>50 G</p>
-            <img class="powerIcon" src="./src/images/Firebolt.png" />
-            <img class="keyIcon" src="./src/images/QButton.png" />
-          </picture>
-        </button>
+        <section id="game-over">
+          <span>Game Over</span>
+          <button id="play-again">Play Again</button>
+        </section>
+        <section id="game-ui">
+          <div id="coin">
+            <picture>
+              <img width="32" src="./coin.png" />
+            </picture>
+            <span id="actualCoins"></span>
+          </div>
+          <div id="gamble">
+            <button id="gambleLess">-</button>
+            <span id="actualBet">10</span>
+            <button id="gambleMore">+</button>
+          </div>
+          <button id="q-button">
+            <picture>
+              <p>10 G</p>
+              <img class="powerIcon" src="./Firebolt.png" />
+              <img class="keyIcon" src="./QButton.png" />
+            </picture>
+          </button>
+          <button id="w-button">
+            <picture>
+              <p>20 G</p>
+              <img class="powerIcon" src="./FireringIcon.png" />
+              <img class="keyIcon" src="./WButton.png" />
+            </picture>
+          </button>
+        </section>
       </div>
     </div>
     <script type="module" src="/src/index.ts"></script>

@@ -19,4 +19,5 @@ export default defineConfig({
     assetsInlineLimit: 0, // excalibur cannot handle inlined xml in prod mode
     sourcemap: true,
   },
+  base: "./",
 });

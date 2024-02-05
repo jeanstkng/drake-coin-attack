@@ -50,6 +50,7 @@ export class Enemy extends Actor {
           precollisionEv.other.kill();
 
           if (this.health <= 0) {
+            this.drake.incrementCoins(1);
             this.kill();
           }
           break;
@@ -57,6 +58,15 @@ export class Enemy extends Actor {
           this.health -= 100;
 
           if (this.health <= 0) {
+            this.drake.incrementCoins(1);
+            this.kill();
+          }
+          break;
+        case "fireAttackW":
+          this.health -= 100;
+
+          if (this.health <= 0) {
+            this.drake.incrementCoins(1);
             this.kill();
           }
           break;
